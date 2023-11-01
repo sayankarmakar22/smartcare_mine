@@ -1,135 +1,114 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Login Page</title>
-    <link rel="stylesheet" href="css/login.css" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
+
+    <title>Welcome</title>
+    <style>
+      #sagi {
+        width: 500px;
+        height: auto;
+        text-align: center;
+        padding: 10px;
+        outline: 5px;
+        outline-style: double;
+        outline-color: darkcyan;
+        background-image: radial-gradient(cyan, limegreen);
+        margin-top: 200px;
+      }
+
+      #lo {
+        background-color: green;
+        font-size: 15px;
+      }
+    </style>
   </head>
+
   <body>
-    <section class="h-100 gradient-form" style="background-color: #eee">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col-xl-10">
-            <div class="card rounded-3 text-black">
-              <div class="row g-0">
-                <div class="col-lg-6">
-                  <div class="card-body p-md-5 mx-md-4">
-                    <div class="text-center">
-                      <img
-                        src="images/help.png"
-                        style="width: 185px"
-                        alt="logo"
-                      />
-                      <h4 class="mt-1 mb-5 pb-1">We are The Smart Care</h4>
-                    </div>
-
-                    <form>
-                      <p>Please login to your account</p>
-
-                      <div class="form-outline mb-4">
-                        <label class="form-label" for="form2Example11"
-                          >Username</label
-                        >
-                        <input
-                          type="email"
-                          id="form2Example11"
-                          class="form-control"
-                          placeholder="Username"
-                          required
-                        />
-                      </div>
-
-                      <div class="form-outline mb-4">
-                        <label class="form-label" for="form2Example22"
-                          >Password</label
-                        >
-                        <input
-                          type="password"
-                          id="form2Example22"
-                          class="form-control"
-                          placeholder="Password"
-                          required
-                        />
-                      </div>
-
-                      <div class="text-center pt-1 mb-5 pb-1">
-                        <button
-                          class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                          type="button"
-                          onclick="blankhandeling()"
-                        >
-                          Log in
-                        </button>
-                        <a
-                          class="text-muted"
-                          href="ForgetPassword.html"
-                          target="_blank"
-                          >Forgot password?</a
-                        >
-                      </div>
-
-                      <div
-                        class="d-flex align-items-center justify-content-center pb-4"
-                      >
-                        <p class="mb-0 me-2">
-                          Don't have an account?<span>..</span>
-                        </p>
-                        <a href="registration.html" target="_blank"
-                          ><button type="button" class="btn btn-outline-danger">
-                            Create new
-                          </button></a
-                        >
-                      </div>
-                    </form>
-                  </div>
-                </div>
-                <div
-                  class="col-lg-6 d-flex align-items-center gradient-custom-2"
-                >
-                  <div class="text-white px-3 py-4 p-md-5 mx-md-4">
-                    <h4 class="mb-4">We are more than just a company</h4>
-                    <p class="small mb-0">
-                      Our Smart Care Company is dedicated to making a positive
-                      impact in our community. We provide a wide range of
-                      support services, from assisting the elderly and helping
-                      wherer they need and many more. we provide 24*7 service.
-                      With a passionate team of volunteers and a commitment to
-                      social responsibility, we strive to improve lives and
-                      create a better future for all.
-
-                      <br />
-                      <br />Join us in our mission to make the world a more
-                      compassionate and caring place.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <center>
+      <div id="sagi">
+        <form>
+          <div class="form-group">
+            <label for="user">Select your Designation:</label>
+            <select class="form-control" required>
+              <option value="user">User</option>
+              <option value="ngo">NGO</option>
+              <option value="agent">NGO Agent</option>
+            </select>
+          <div class="form-group">
+            <label>Username</label>
+            <input
+              type="email"
+              class="form-control"
+              id="username"
+              name="username"
+              aria-describedby="emailHelp"
+              placeholder="Enter email"
+              required
+            />
+    
           </div>
-        </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              id="exampleInputPassword1"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <small><a href="#">Forgot Password</a></small><br>
+          <a
+            href="#"
+            class="btn btn-secondary btn-lg active"
+            id="lo"
+            role="button"
+            aria-pressed="true"
+            >LOG IN</a
+          ><br>
+          <small><a href="#">Create new account?</a></small>
+        </form>
       </div>
-    </section>
+    </center>
 
-    <!-- js -->
-    <script>
-      const blankhandeling = () => {
-        let userinput = document.getElementById("form2Example11").value;
-        let passinput = document.getElementById("form2Example22").value;
-
-        if (userinput.trim() == "" || passinput.trim() === "") {
-          alert("please enter your username and password!");
-        } else {
-          alert("login successful");
-        }
-      };
-    </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script>
+      document.querySelector("#lo").addEventListener("click", function () {
+        console.log("login successful");
+        alert("Successful!!");
+      });
+    </script> -->
   </body>
 </html>
