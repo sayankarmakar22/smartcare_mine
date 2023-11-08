@@ -1,21 +1,16 @@
-package com.smartcare.SmartCare.Model;
+package com.smartcare.SmartCare.DTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+
+import jakarta.annotation.sql.DataSourceDefinitions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class Owner {
-    @Id
-    private String ownerId;
+public class OwnerDTO {
     private String name;
     private String address;
     private String dob;
@@ -26,6 +21,4 @@ public class Owner {
     private String longitude;
     private String latitude;
     private String password;
-    private Date createdAt;
-
 }
