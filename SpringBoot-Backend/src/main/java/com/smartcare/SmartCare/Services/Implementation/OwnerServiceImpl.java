@@ -38,15 +38,17 @@ public class OwnerServiceImpl implements OwnerServices {
 
     private Logger log = LoggerFactory.getLogger(OwnerServiceImpl.class);
     @Override
-    public Boolean saveAadharCardToLocalStorage(MultipartFile file,String ngoId){
-        Path filePath = Paths.get(pathToSavedAadharCard, ngoId);
+    public Boolean saveAadharCardToLocalStorage(MultipartFile file,String ngoId) throws IOException {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        Path filePath = Paths.get(pathToSavedAadharCard, ngoId.concat(".jpg"));
+
         try (OutputStream outputStream = Files.newOutputStream(filePath)) {
             outputStream.write(file.getBytes());
             return true;
         }
-        catch (IOException e) {
-            return false;
-        }
+        catch (Exception e){
+        return false;}
+
     }
     @Override
     public Object saveOwner(OwnerDTO ownerDTO) {

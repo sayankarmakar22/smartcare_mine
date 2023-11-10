@@ -37,7 +37,7 @@ public class OwnerControllers {
         }
     }
     @PostMapping("/upload-adhar-Card")
-    public ResponseEntity<Object> UploadFile(@RequestParam("file") MultipartFile file,@RequestParam String ngoId){
+    public ResponseEntity<Object> UploadFile(@RequestParam("file") MultipartFile file,@RequestParam("ngoId") String ngoId){
         try{
             response.clear();
             response.add(ownerService.saveAadharCardToLocalStorage(file,ngoId));
