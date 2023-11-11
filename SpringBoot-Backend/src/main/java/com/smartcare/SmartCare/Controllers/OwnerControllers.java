@@ -87,7 +87,7 @@ public class OwnerControllers {
         }
     }
     @GetMapping("/checkNgoId/{ngoId}")
-    public ResponseEntity<Object> checkEmail(@PathVariable String ngoId){
+    public ResponseEntity<Object> checkNgoId(@PathVariable String ngoId){
         return new ResponseEntity<>(ownerService.checkNgoId(ngoId),HttpStatus.OK);
     }
 
