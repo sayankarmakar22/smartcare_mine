@@ -7,11 +7,14 @@ import com.smartcare.SmartCare.Response.MappingResponse;
 import com.smartcare.SmartCare.Services.Implementation.CustomerServicesImpl;
 import com.smartcare.SmartCare.Services.Implementation.OwnerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +40,7 @@ public class OwnerControllers {
         }
     }
     @PostMapping("/upload-adhar-Card")
-    public ResponseEntity<Object> UploadFile(@RequestParam("file") MultipartFile file,@RequestParam String ngoId){
+    public ResponseEntity<Object> UploadFile(@RequestParam("file") MultipartFile file,@RequestParam("ngoId") String ngoId){
         try{
             response.clear();
             response.add(ownerService.saveAadharCardToLocalStorage(file,ngoId));
@@ -50,6 +53,11 @@ public class OwnerControllers {
             return new ResponseEntity<>(MappingResponse.mapUniversalResponse("Error while uploading ngo owner aadhar card",response), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/get-adhar-Card/{filename:.+}")
+    public ResponseEntity<Resource> getFile(@PathVariable String filename) throws MalformedURLException, FileNotFoundException {
+            return new ResponseEntity<>(ownerService.viewAadharCard(filename), HttpStatus.FOUND);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> viewOwner(@PathVariable String id){
         try{
@@ -79,8 +87,12 @@ public class OwnerControllers {
         }
     }
     @GetMapping("/checkNgoId/{ngoId}")
-    public ResponseEntity<Object> checkEmail(@PathVariable String ngoId){
+    public ResponseEntity<Object> checkNgoId(@PathVariable String ngoId){
         return new ResponseEntity<>(ownerService.checkNgoId(ngoId),HttpStatus.OK);
+    }
+    @GetMapping("/all/{id}")
+    public ResponseEntity<Object> findAllAgent(@PathVariable String id){
+        return new ResponseEntity<>(ownerService.listAllAgentByOwnerId(id),HttpStatus.OK);
     }
 
 }

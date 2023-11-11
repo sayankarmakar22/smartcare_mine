@@ -1,28 +1,20 @@
-package com.smartcare.SmartCare.Model;
+package com.smartcare.SmartCare.DTO;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class Agent {
-    @Id
+public class AgentResponse {
     private String agentId;
+    private String ngoId;
     private String name;
-    private String PhoneNumber;
+    private String phoneNumber;
     private String email;
     private String address;
-    private Date createdAt;
-    @ManyToOne
-    @JoinColumn(name = "ownerId")
-    private Owner owner;
-
-
+    private Date createAt;
 }
