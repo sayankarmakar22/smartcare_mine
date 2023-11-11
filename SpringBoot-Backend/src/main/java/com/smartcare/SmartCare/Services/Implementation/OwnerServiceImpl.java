@@ -2,6 +2,7 @@ package com.smartcare.SmartCare.Services.Implementation;
 
 import com.smartcare.SmartCare.DTO.OwnerDTO;
 import com.smartcare.SmartCare.Helper.OwnerHelper;
+import com.smartcare.SmartCare.Model.Agent;
 import com.smartcare.SmartCare.Model.Owner;
 import com.smartcare.SmartCare.Redis.Helper.RedisOwnerHelper;
 import com.smartcare.SmartCare.Redis.Model.RedisOwner;
@@ -26,6 +27,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class OwnerServiceImpl implements OwnerServices {
@@ -92,6 +95,12 @@ public class OwnerServiceImpl implements OwnerServices {
     @Override
     public String checkNgoId(String email) {
         return ownerRepo.existsByngoId(email) ? "NGO Already Registered" : "NGO Not Registered" ;
+    }
+
+    @Override
+    public List<Map<String,Object>> listAllAgentByOwnerId(String id) {
+        log.info(id);
+        return ownerRepo.findAllAgentByOwnerId(id);
     }
 
     @Override

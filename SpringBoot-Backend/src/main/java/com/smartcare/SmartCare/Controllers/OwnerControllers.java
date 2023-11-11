@@ -90,5 +90,9 @@ public class OwnerControllers {
     public ResponseEntity<Object> checkNgoId(@PathVariable String ngoId){
         return new ResponseEntity<>(ownerService.checkNgoId(ngoId),HttpStatus.OK);
     }
+    @GetMapping("/all/{id}")
+    public ResponseEntity<Object> findAllAgent(@PathVariable String id){
+        return new ResponseEntity<>(ownerService.listAllAgentByOwnerId(id),HttpStatus.OK);
+    }
 
 }
