@@ -17,7 +17,7 @@ public class AgentHelper {
         agent.setAddress(agentDTO.getAddress());
         agent.setCreatedAt(new Date());
         Owner owner = new Owner();
-        owner.setOwnerId(agentDTO.getNgoId());
+        owner.setOwnerId(agentDTO.getOwnerId());
         agent.setOwner(owner);
         return agent;
     }

@@ -4,6 +4,7 @@ import com.smartcare.SmartCare.DTO.AgentDTO;
 import com.smartcare.SmartCare.DTO.OwnerDTO;
 import com.smartcare.SmartCare.Response.MappingResponse;
 import com.smartcare.SmartCare.Services.AgentServices;
+import com.smartcare.SmartCare.Services.Implementation.AgentServicesImpl;
 import com.smartcare.SmartCare.Services.Implementation.OwnerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/SmartCare/agent")
 public class AgentControllers {
     @Autowired
-    private AgentServices agentServices;
+    private AgentServicesImpl agentServices;
     private List<Object> response = new ArrayList<>();
 
     @PostMapping("/save")

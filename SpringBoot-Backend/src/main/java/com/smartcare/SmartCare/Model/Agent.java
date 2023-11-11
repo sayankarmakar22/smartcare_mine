@@ -21,7 +21,7 @@ public class Agent {
     private String address;
     private Date createdAt;
     @ManyToOne
-    @JoinColumn(name = "ngoId")
+    @JoinColumn(name = "ownerId")
     private Owner owner;
 
 
