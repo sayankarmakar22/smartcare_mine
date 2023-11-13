@@ -77,6 +77,6 @@ public class CustomerServicesImpl implements CustomerServices {
 
     @Override
     public String checkEmail(String email) {
-        return customerRepo.existsByemail(email) ? "Email Available " :"Email Not Available " ;
+        return customerRepo.existsByemail(email) ? "Email Not Available " :"Email Available " ;
     }
 }
