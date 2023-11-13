@@ -15,6 +15,7 @@ public class AgentHelper {
         agent.setPhoneNumber(agentDTO.getPhoneNumber());
         agent.setEmail(agentDTO.getEmail());
         agent.setAddress(agentDTO.getAddress());
+        agent.setPassword(agentDTO.getPassword());
         agent.setCreatedAt(new Date());
         Owner owner = new Owner();
         owner.setOwnerId(agentDTO.getOwnerId());

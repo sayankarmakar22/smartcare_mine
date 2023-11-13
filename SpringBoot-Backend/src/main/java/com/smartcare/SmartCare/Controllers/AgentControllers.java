@@ -72,4 +72,13 @@ public class AgentControllers {
         return new ResponseEntity<>(agentServices.generateNextAgentId(id),HttpStatus.OK);
     }
 
+    @PostMapping("/login/{id}/{pass}/{ngoId}")
+    public ResponseEntity<Object> login(@PathVariable String id,@PathVariable String pass,@PathVariable String ngoId){
+        return new ResponseEntity<>(agentServices.logIn(id,pass,ngoId),HttpStatus.ACCEPTED);
+    }
+    @PostMapping("/logout/{id}/{pass}/{ngoId}")
+    public ResponseEntity<Object> logout(@PathVariable String id,@PathVariable String pass,@PathVariable String ngoId){
+        return new ResponseEntity<>(agentServices.logout(id,pass,ngoId),HttpStatus.ACCEPTED);
+    }
+
 }

@@ -6,19 +6,28 @@ import com.smartcare.SmartCare.Model.Agent;
 import com.smartcare.SmartCare.Model.Owner;
 import com.smartcare.SmartCare.Redis.Helper.RedisOwnerHelper;
 import com.smartcare.SmartCare.Redis.Model.RedisOwner;
+import com.smartcare.SmartCare.Repository.ActiveAgentRepo;
+import com.smartcare.SmartCare.Repository.AgentRepo;
 import com.smartcare.SmartCare.Repository.OwnerRepo;
 import com.smartcare.SmartCare.Services.OwnerServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.geo.Point;
+import org.springframework.data.geo.*;
+import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.GeoCoordinate;
+import redis.clients.jedis.UnifiedJedis;
+import redis.clients.jedis.args.GeoUnit;
+import redis.clients.jedis.resps.GeoRadiusResponse;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,53 +36,70 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OwnerServiceImpl implements OwnerServices {
     @Autowired
     private OwnerRepo ownerRepo;
+
+    @Autowired
+    private AgentRepo agentRepo;
+
+    @Autowired
+    private ActiveAgentRepo activeAgentRepo;
     @Value("${upload.path}")
     private String pathToSavedAadharCard;
 
     private final String HashKeyForOwner = "owner";
-    private final String HashKeyForNgoLocation = "longlatofngo";
+    private final String HashKeyForNgoLocation = "StoreNgoLongLat";
 
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private UnifiedJedis jedis;
+
     private Logger log = LoggerFactory.getLogger(OwnerServiceImpl.class);
+
+    public String getHashKeyForNgoLocation(){
+        return HashKeyForNgoLocation;
+    }
+
     @Override
-    public Boolean saveAadharCardToLocalStorage(MultipartFile file,String ngoId) throws IOException {
+    public Boolean saveAadharCardToLocalStorage(MultipartFile file, String ngoId) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Path filePath = Paths.get(pathToSavedAadharCard, ngoId.concat(".jpg"));
 
         try (OutputStream outputStream = Files.newOutputStream(filePath)) {
             outputStream.write(file.getBytes());
             return true;
+        } catch (Exception e) {
+            return false;
         }
-        catch (Exception e){
-        return false;}
 
     }
+
     @Override
     public Object saveOwner(OwnerDTO ownerDTO) {
         Owner owner = ownerRepo.save(OwnerHelper.convertIntoOwner(ownerDTO, new Owner()));
-        redisTemplate.opsForHash().put(HashKeyForOwner,owner.getOwnerId(), RedisOwnerHelper.convertIntoRedisOwner(new RedisOwner(),owner));
-        redisTemplate.opsForGeo().add(HashKeyForNgoLocation,new Point(Double.parseDouble(owner.getLongitude()),Double.parseDouble(owner.getLatitude())),owner.getNgoId());
+        redisTemplate.opsForHash().put(HashKeyForOwner, owner.getOwnerId(), RedisOwnerHelper.convertIntoRedisOwner(new RedisOwner(), owner));
         log.info("saved to owner to db, ngo id is : " + ownerDTO.getNgoId());
+        double longitude = Double.parseDouble(ownerDTO.getLongitude());
+        double latitude = Double.parseDouble(ownerDTO.getLatitude());
+        jedis.geoadd(HashKeyForNgoLocation, longitude, latitude, ownerDTO.getNgoId());
+        log.info("ngo info saved to redis longitude : " + ownerDTO.getLongitude() + " latitude : " + ownerDTO.getLatitude());
         return owner;
     }
 
     @Override
     public Object viewOwner(String userId) {
         Object foundFromRedisOwner = redisTemplate.opsForHash().get(HashKeyForOwner, userId);
-        if(foundFromRedisOwner == null){
+        if (foundFromRedisOwner == null) {
             log.info("found owner from  db, id is : " + userId);
             return ownerRepo.findByownerId(userId);
-        }
-        else if(foundFromRedisOwner != null){
+        } else if (foundFromRedisOwner != null) {
             log.info("found owner from redis");
             return foundFromRedisOwner;
         }
@@ -82,10 +108,10 @@ public class OwnerServiceImpl implements OwnerServices {
 
     @Override
     public String deleteOwner(String userId) {
-        if(ownerRepo.existsById(userId)){
-            redisTemplate.opsForHash().delete(HashKeyForOwner,userId);
+        if (ownerRepo.existsById(userId)) {
+            redisTemplate.opsForHash().delete(HashKeyForOwner, userId);
             String ngoId = ownerRepo.findByownerId(userId).getNgoId();
-            redisTemplate.opsForGeo().remove(HashKeyForNgoLocation,ngoId);
+            redisTemplate.opsForGeo().remove(HashKeyForNgoLocation, ngoId);
             ownerRepo.deleteById(userId);
             return "deleted " + userId;
         }
@@ -94,13 +120,43 @@ public class OwnerServiceImpl implements OwnerServices {
 
     @Override
     public String checkNgoId(String email) {
-        return ownerRepo.existsByngoId(email) ? "NGO Already Registered" : "NGO Not Registered" ;
+        return ownerRepo.existsByngoId(email) ? "NGO Already Registered" : "NGO Not Registered";
     }
 
     @Override
-    public List<Map<String,Object>> listAllAgentByOwnerId(String id) {
+    public List<Map<String, Object>> listAllAgentByOwnerId(String id) {
         log.info(id);
         return ownerRepo.findAllAgentByOwnerId(id);
+    }
+
+    @Override
+    public Object findNgo(String id) {
+        if(id.contains("ngo")){
+            return ownerRepo.findNgobyNgoId(id);
+        }
+        return ownerRepo.findNgobyOwnerId(id);
+    }
+
+    @Override
+    public int totalNgoMembers(String ownerId) {
+        return ownerRepo.totalNgoMembers(ownerId);
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllActiveMembers(String ngoId) {
+        Map<String,Object> countActiveMember = new HashMap<>();
+        countActiveMember.put("Active Members ",activeAgentRepo.totalActiveNgoMembers(ngoId));
+
+        List<String> activeMembersId = activeAgentRepo.getActiveMembersId(ngoId,"ACTIVE");
+        List<Map<String, Object>> response = new ArrayList<>();
+        response.add(countActiveMember);
+        for(String id : activeMembersId){
+            log.info(id);
+            Map<String, Object> activeMembers = agentRepo.getActiveMembersNameAndPhone(id);
+            response.add(activeMembers);
+        }
+
+        return response;
     }
 
     @Override

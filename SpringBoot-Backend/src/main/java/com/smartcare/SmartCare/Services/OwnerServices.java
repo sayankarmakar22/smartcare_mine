@@ -20,5 +20,10 @@ public interface OwnerServices {
 
     List<Map<String,Object>> listAllAgentByOwnerId(String id);
 
+    Object findNgo(String id);
+
+    int totalNgoMembers(String ownerId);
+
+    List<Map<String,Object>> findAllActiveMembers(String ngoId);
     Resource viewAadharCard(String ngoId) throws MalformedURLException, FileNotFoundException;
 }

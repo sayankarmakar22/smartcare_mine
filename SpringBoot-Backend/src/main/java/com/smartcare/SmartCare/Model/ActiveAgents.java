@@ -1,22 +1,22 @@
 package com.smartcare.SmartCare.Model;
 
+import com.smartcare.SmartCare.Model.Agent;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-
-import java.util.Date;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class AgentLogInHistory {
+public class ActiveAgents {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    private Date dateTime;
-    private String AgentId;
+    private String agentId;
+
+    private String status;
+
     private String NgoId;
+
 }
