@@ -2,6 +2,7 @@ package com.smartcare.SmartCare.Services.Implementation;
 
 import com.smartcare.SmartCare.DTO.OwnerDTO;
 import com.smartcare.SmartCare.Helper.OwnerHelper;
+import com.smartcare.SmartCare.Model.Agent;
 import com.smartcare.SmartCare.Model.Owner;
 import com.smartcare.SmartCare.Redis.Helper.RedisOwnerHelper;
 import com.smartcare.SmartCare.Redis.Model.RedisOwner;
@@ -11,17 +12,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.geo.Point;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class OwnerServiceImpl implements OwnerServices {
@@ -38,15 +45,17 @@ public class OwnerServiceImpl implements OwnerServices {
 
     private Logger log = LoggerFactory.getLogger(OwnerServiceImpl.class);
     @Override
-    public Boolean saveAadharCardToLocalStorage(MultipartFile file,String ngoId){
-        Path filePath = Paths.get(pathToSavedAadharCard, ngoId);
+    public Boolean saveAadharCardToLocalStorage(MultipartFile file,String ngoId) throws IOException {
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        Path filePath = Paths.get(pathToSavedAadharCard, ngoId.concat(".jpg"));
+
         try (OutputStream outputStream = Files.newOutputStream(filePath)) {
             outputStream.write(file.getBytes());
             return true;
         }
-        catch (IOException e) {
-            return false;
-        }
+        catch (Exception e){
+        return false;}
+
     }
     @Override
     public Object saveOwner(OwnerDTO ownerDTO) {
@@ -86,5 +95,23 @@ public class OwnerServiceImpl implements OwnerServices {
     @Override
     public String checkNgoId(String email) {
         return ownerRepo.existsByngoId(email) ? "NGO Already Registered" : "NGO Not Registered" ;
+    }
+
+    @Override
+    public List<Map<String,Object>> listAllAgentByOwnerId(String id) {
+        log.info(id);
+        return ownerRepo.findAllAgentByOwnerId(id);
+    }
+
+    @Override
+    public Resource viewAadharCard(String ngoId) throws MalformedURLException, FileNotFoundException {
+        Path filePath = Paths.get(pathToSavedAadharCard).resolve(ngoId);
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        } else {
+            throw new FileNotFoundException(ngoId + " ngo owner has not submitted aadhar card yet");
+        }
     }
 }
