@@ -4,46 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMART-CARE NGO</title>
+
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
-    <!-- Favicons -->
-    <link href="../ngo_UI/assets/img/help.png" rel="icon" />
-    <link href="../ngo_UI/assets/img/help.png" rel="apple-touch-icon" />
+    <link rel="icon" href="../ngo_UI/assets/img/help.png">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="apple-touch-icon" href="../ngo_UI/assets/img/help.png">
 
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <header id="header">
-        <div class="logo">
-            <a href="index.html">
-                <img src="../ngo_UI/assets/img/help.png" alt="">
-                <span class="logo-name">SMART-CARE NGO</span>
-            </a>
-        </div>
-        <div class="navbar">
-            <ul>
-                <li id="notication">
-                    <a href="./notification.html">
-                    <img src="./assets/img/chat.png" alt="notification">
-                </a>
-                </li>
-                <li id="history">
-                    <a href="./history.html">
-                        <img src="./assets/img/history.png" alt="history">
+     <div class="sidebar">
+        <div class="sidebar-logo">
+            <ul class="menu">
+                <li class="active">
+                    <a href="#" >
+                     <i class="fa fa-tachometer"></i>
+                     <span>Dashboard</span>
                     </a>
                 </li>
-                <li>profile</li>
+                <li>
+                    <a href="./agent_profile.html">
+                      <i class="fa fa-user"></i>
+                     <span>Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./notification.html">
+                     <i class="fa fa-bell"></i>
+                     <span>Notification</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./history.html">
+                     <i class="fa fa-history "></i>
+                     <span>History</span>
+                    </a>
+                </li>
+                <li class="logout">
+                    <a href="#">
+                      <i class="fa fa-sign-out"></i>
+                     <span>Logout</span>
+                    </a>
+                </li>
             </ul>
-
         </div>
-    </header>
+     </div>
+     <div class="main-content">
+        <div class="header">
+            <div class="ngo-logo">
+                <a href="./index.html">
+                <img src="../ngo_UI/assets/img/help.png" alt="">
+                <span>SMART-CARE NGO</span>
+                </a>
+            </div>
+            <div class="profile-logo">
+                <a href="./agent_profile.html">
+                    <img src="../ngo_UI/assets/img/profile-img.jpg" alt="">
+                </a>
+            </div>
+        </div>
+     </div>
 </body>
 </html>
