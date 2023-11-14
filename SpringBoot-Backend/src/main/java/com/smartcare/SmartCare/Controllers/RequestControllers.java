@@ -17,12 +17,25 @@ public class RequestControllers {
     @Autowired
     private RequestServicesImpl requestServices;
     @GetMapping("/nearestNgo/{lon}/{lat}")
-    public ResponseEntity<List<NgoWithKms>> getNgo(@PathVariable double lon, @PathVariable double lat){
+    public ResponseEntity<List<NgoWithKms>> getNgo(@PathVariable double lon,
+                                                   @PathVariable double lat){
         return new ResponseEntity<>(requestServices.sentNearestNgoWithDistance(lon,lat), HttpStatus.FOUND);
     }
 
-    @PostMapping("/book-ngo")
-    public ResponseEntity<String> bookNgo(@PathVariable String ngoId,@PathVariable String custId){
-        return new ResponseEntity<>(requestServices.bookedNgo(ngoId,custId),HttpStatus.ACCEPTED);
+    @PostMapping("/book-ngo/{ngoId}/{custId}/{lon}/{lat}")
+    public ResponseEntity<String> bookNgo(@PathVariable String ngoId,
+                                          @PathVariable String custId,
+                                          @PathVariable String lon,
+                                          @PathVariable String lat){
+        return new ResponseEntity<>(requestServices.bookedNgo(ngoId,custId,lon,lat),HttpStatus.ACCEPTED);
+    }
+    @GetMapping("/view/{id}")
+    public ResponseEntity<Object> viewRequest(@PathVariable String id){
+        return new ResponseEntity<>(requestServices.viewRequestByCustId(id),HttpStatus.FOUND);
+    }
+
+    @PostMapping("/done/{id}")
+    public ResponseEntity<Object> completeRequest(@PathVariable String id){
+        return new ResponseEntity<>(requestServices.markedRequestAsClosed(id),HttpStatus.OK);
     }
 }

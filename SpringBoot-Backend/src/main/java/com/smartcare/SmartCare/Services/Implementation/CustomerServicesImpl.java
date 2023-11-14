@@ -22,7 +22,7 @@ public class CustomerServicesImpl implements CustomerServices {
     private CustomerRepo customerRepo;
     @Autowired
     private RedisTemplate redisTemplate;
-    public final String HashKeyForCustomer = "customer";
+    public static final String HashKeyForCustomer = "customer";
 
     private Logger log = LoggerFactory.getLogger(CustomerServicesImpl.class);
     @Override

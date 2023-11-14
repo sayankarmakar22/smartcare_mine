@@ -115,7 +115,4 @@ public class OwnerControllers {
     public ResponseEntity<List<Map<String,Object>>> activeMembers(@PathVariable String ngoId){
         return new ResponseEntity<>(ownerService.findAllActiveMembers(ngoId),HttpStatus.FOUND);
     }
-
-
-
 }

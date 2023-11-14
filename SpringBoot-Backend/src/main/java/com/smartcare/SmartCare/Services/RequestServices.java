@@ -11,5 +11,9 @@ public interface RequestServices {
 
     List<NgoWithKms> sentNearestNgoWithDistance(double longitude, double latitude);
 
-    String bookedNgo(String ngoId,String custId);
+    String bookedNgo(String ngoId,String custId,String lon,String lat);
+
+    Object viewRequestByCustId(String id);
+
+    Object markedRequestAsClosed(String id);
 }
