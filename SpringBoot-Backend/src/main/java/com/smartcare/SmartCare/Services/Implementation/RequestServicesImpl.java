@@ -155,4 +155,12 @@ public class RequestServicesImpl implements RequestServices {
         return null;
     }
 
+    @Override
+    public Object allRequest(String type, String id) {
+        if(type.equals("Agent") || type.equals("Owner")){
+            return helpListRepo.findByngoId(id);
+        }
+        return helpListRepo.findRequestByUserId(id);
+    }
+
 }

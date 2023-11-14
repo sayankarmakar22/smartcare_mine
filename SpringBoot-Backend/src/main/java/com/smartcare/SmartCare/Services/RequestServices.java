@@ -1,6 +1,7 @@
 package com.smartcare.SmartCare.Services;
 
 import com.smartcare.SmartCare.DTO.NgoWithKms;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Map;
@@ -16,4 +17,5 @@ public interface RequestServices {
     Object viewRequestByCustId(String id);
 
     Object markedRequestAsClosed(String id);
+    Object allRequest(String type,String id);
 }

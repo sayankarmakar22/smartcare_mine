@@ -38,4 +38,10 @@ public class RequestControllers {
     public ResponseEntity<Object> completeRequest(@PathVariable String id){
         return new ResponseEntity<>(requestServices.markedRequestAsClosed(id),HttpStatus.OK);
     }
+
+    @GetMapping("/all/{type}/{id}")
+    public ResponseEntity<Object> allRequest(@PathVariable String type,
+                                             @PathVariable String id){
+        return new ResponseEntity<>(requestServices.allRequest(type,id),HttpStatus.FOUND);
+    }
 }
