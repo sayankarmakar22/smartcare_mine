@@ -67,19 +67,22 @@ public class RequestServicesImpl implements RequestServices {
         List<String> nearestNgoByLongLat = findNearestNgoByLongLat(longitude, latitude);
         List<NgoWithKms> finalResultOfNgoWithKms = new ArrayList<>();
         log.info(String.valueOf(nearestNgoByLongLat.size()));
-        for(int i = 0;i<nearestNgoByLongLat.size();i++){
-            NgoWithKms ngoWithKms = new NgoWithKms();
-            String ngoId = nearestNgoByLongLat.get(i);
-            log.info(ngoId);
-            Map<String, String> longLatByNgoId = ownerRepo.findLongLatByNgoId(ngoId);
-            String longitude1 = longLatByNgoId.get("longitude");
-            String latitude1 = longLatByNgoId.get("latitude");
-            double distanceFromUserCurrentLocation = calculateDistanceBetweenTwoLongLat(longitude, latitude, Double.parseDouble(longitude1), Double.parseDouble(latitude1));
-            ngoWithKms.setNgoName(ngoId);
-            ngoWithKms.setDistance(distanceFromUserCurrentLocation);
-            finalResultOfNgoWithKms.add(i,ngoWithKms);
+        if(nearestNgoByLongLat.isEmpty()) {
+            for (int i = 0; i < nearestNgoByLongLat.size(); i++) {
+                NgoWithKms ngoWithKms = new NgoWithKms();
+                String ngoId = nearestNgoByLongLat.get(i);
+                log.info(ngoId);
+                Map<String, String> longLatByNgoId = ownerRepo.findLongLatByNgoId(ngoId);
+                String longitude1 = longLatByNgoId.get("longitude");
+                String latitude1 = longLatByNgoId.get("latitude");
+                double distanceFromUserCurrentLocation = calculateDistanceBetweenTwoLongLat(longitude, latitude, Double.parseDouble(longitude1), Double.parseDouble(latitude1));
+                ngoWithKms.setNgoName(ngoId);
+                ngoWithKms.setDistance(distanceFromUserCurrentLocation);
+                finalResultOfNgoWithKms.add(i, ngoWithKms);
+            }
+            return finalResultOfNgoWithKms;
         }
-        return finalResultOfNgoWithKms;
+        throw new RuntimeException("No Nearest Ngo is found");
 
     }
 
