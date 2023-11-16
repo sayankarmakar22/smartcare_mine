@@ -8,15 +8,21 @@ import com.smartcare.SmartCare.Services.Implementation.CustomerServicesImpl;
 import com.smartcare.SmartCare.Services.Implementation.OwnerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.geo.GeoResult;
+import org.springframework.data.geo.GeoResults;
+import org.springframework.data.redis.connection.RedisGeoCommands;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.resps.GeoRadiusResponse;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/SmartCare/Owner")
@@ -24,7 +30,6 @@ public class OwnerControllers {
     @Autowired
     private OwnerServiceImpl ownerService;
     private List<Object> response = new ArrayList<>();
-
     @PostMapping("/save")
     public ResponseEntity<Object> saveOwner(@RequestBody OwnerDTO ownerDTO){
         try{
@@ -95,4 +100,19 @@ public class OwnerControllers {
         return new ResponseEntity<>(ownerService.listAllAgentByOwnerId(id),HttpStatus.OK);
     }
 
+
+    @GetMapping("/ngo/{id}")
+    public ResponseEntity<Object> findNgo(@PathVariable String id){
+        return new ResponseEntity<>(ownerService.findNgo(id),HttpStatus.FOUND);
+    }
+
+    @GetMapping("/total-members/@{ownerId}")
+    public ResponseEntity<Integer> getTotalMembers(@PathVariable String ownerId){
+       return new ResponseEntity<>(ownerService.totalNgoMembers(ownerId),HttpStatus.OK);
+    }
+
+    @GetMapping("/active-members/@{ngoId}")
+    public ResponseEntity<List<Map<String,Object>>> activeMembers(@PathVariable String ngoId){
+        return new ResponseEntity<>(ownerService.findAllActiveMembers(ngoId),HttpStatus.FOUND);
+    }
 }

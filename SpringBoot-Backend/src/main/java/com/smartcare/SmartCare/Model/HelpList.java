@@ -24,7 +24,6 @@ public class HelpList {
     @ManyToOne
     @JoinColumn(name = "customerId")
     private Customer customer;
-    @ManyToOne
-    @JoinColumn(name = "agentId")
-    private Agent agent;
+
+    private String ngoId;
 }

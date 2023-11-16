@@ -20,6 +20,7 @@ public class Agent {
     private String email;
     private String address;
     private Date createdAt;
+    private String password;
     @ManyToOne
     @JoinColumn(name = "ownerId")
     private Owner owner;

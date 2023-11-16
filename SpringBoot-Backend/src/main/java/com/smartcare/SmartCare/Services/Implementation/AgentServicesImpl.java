@@ -3,9 +3,14 @@ package com.smartcare.SmartCare.Services.Implementation;
 import com.smartcare.SmartCare.DTO.AgentDTO;
 import com.smartcare.SmartCare.DTO.AgentResponse;
 import com.smartcare.SmartCare.Helper.AgentHelper;
+import com.smartcare.SmartCare.Model.ActiveAgents;
 import com.smartcare.SmartCare.Model.Agent;
+import com.smartcare.SmartCare.Model.AgentLogInHistory;
+import com.smartcare.SmartCare.Model.Owner;
 import com.smartcare.SmartCare.Redis.Helper.RedisAgentHelper;
 import com.smartcare.SmartCare.Redis.Model.RedisAgent;
+import com.smartcare.SmartCare.Repository.ActiveAgentRepo;
+import com.smartcare.SmartCare.Repository.AgentLogInHistoryRepo;
 import com.smartcare.SmartCare.Repository.AgentRepo;
 import com.smartcare.SmartCare.Services.AgentServices;
 import org.slf4j.Logger;
@@ -14,10 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.Map;
+
 @Service
 public class AgentServicesImpl implements AgentServices {
     @Autowired
     private AgentRepo agentRepo;
+
+    @Autowired
+    private ActiveAgentRepo activeAgentRepo;
+
+    @Autowired
+    private AgentLogInHistoryRepo agentLogInHistoryRepo;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -66,5 +80,56 @@ public class AgentServicesImpl implements AgentServices {
         String latestAgentId = agentRepo.latestAgentId(ownerId);
         int trimmedId = Integer.parseInt(latestAgentId.substring(3)) ;
         return latestAgentId.replace(String.valueOf(trimmedId),String.valueOf(trimmedId +1));
+    }
+    @Override
+    public Boolean logIn(String username,String password,String ngoId){
+        if(agentRepo.existsByagentId(username)){
+            if((agentRepo.getPassByAgentId(username).equals(password)) ) {
+                try{
+                    String agentStatus = activeAgentRepo.getStatus(username);
+                    if (agentStatus.equals("DEACTIVE")) {
+                        AgentLogInHistory agentLogInHistory = new AgentLogInHistory();
+                        agentLogInHistory.setDateTime(new Date());
+                        agentLogInHistory.setNgoId(ngoId);
+                        agentLogInHistory.setAgentId(username);
+                        agentLogInHistoryRepo.save(agentLogInHistory);
+                        ActiveAgents activeAgents = new ActiveAgents();
+                        activeAgents.setStatus("ACTIVE");
+                        activeAgents.setNgoId(ngoId);
+                        activeAgents.setAgentId(username);
+                        activeAgentRepo.save(activeAgents);
+                        return true;
+                    }
+                }
+                catch (Exception e){
+                    AgentLogInHistory agentLogInHistory = new AgentLogInHistory();
+                    agentLogInHistory.setDateTime(new Date());
+                    agentLogInHistory.setNgoId(ngoId);
+                    agentLogInHistory.setAgentId(username);
+                    agentLogInHistoryRepo.save(agentLogInHistory);
+                    ActiveAgents activeAgents = new ActiveAgents();
+                    activeAgents.setStatus("ACTIVE");
+                    activeAgents.setNgoId(ngoId);
+                    activeAgents.setAgentId(username);
+                    activeAgentRepo.save(activeAgents);
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String logout(String username, String password, String ngoId) {
+        if(agentRepo.existsByagentId(username)){
+            if(agentRepo.getPassByAgentId(username).equals(password)){
+                ActiveAgents activeAgentsFromDb = activeAgentRepo.findByagentId(username);
+                activeAgentsFromDb.setStatus("DEACTIVE");
+                activeAgentRepo.save(activeAgentsFromDb);
+                return "logged out";
+            }
+        }
+        return "failed to log out";
     }
 }
