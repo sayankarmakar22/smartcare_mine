@@ -1,44 +1,116 @@
-*{
-    margin: 0;
-    padding: 0;
-    color: black;
+* {
+  margin: 0;
+  padding: 0;
+  color: black;
 }
-body{
- background-image: url(../images/newland.png);
- background-repeat: no-repeat;
-background-size: cover;
+body {
+  background-image: url(../images/ss1.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-.container{
-    height: 100vh;
-    width: 100%;
-    margin:  auto;
-    text-align: center;
-   backdrop-filter: blur(4px);
-    
+.container {
+  height: 100vh;
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  /* backdrop-filter: blur(4px); */
 }
-.container img{
-    width: 7rem;
-    height: 7rem;
-    margin-top: 8rem;
+.container img {
+  width: 7rem;
+  height: 7rem;
+  margin-top: 8rem;
 }
-.container h1{
-font-size: 3rem;
-font-family: 'Poppins', sans-serif;
+.container h1 {
+  font-size: 3rem;
+  font-family: "Poppins", sans-serif;
 }
 
-.container p{
-   font-size: 2rem;
-    margin: 10px ;
-    font-family: monospace;
-    font-weight: bold;
+.container p {
+  font-size: 2rem;
+  margin: 10px;
+  font-family: monospace;
+  font-weight: bold;
 }
-#btn{
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    border: solid white;
-    color: white;
-    font-size: 1.2rem;
-    border-radius: 25px;
-    padding: 15px 12px;
-    margin: 10px;
-    background: linear-gradient(rgb(98, 96, 226),rgb(53, 53, 153));
+#btn {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  border: solid rgb(3, 11, 51);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgb(243, 244, 241);
+  border-radius: 25px;
+  padding: 15px 12px;
+  /* width: 300px; */
+  margin: 10px;
+  background: linear-gradient(135deg, #2286c9, rgb(89, 98, 182));
 }
+
+/* Base styles for larger screens */
+
+/* Responsive styles for medium-sized screens */
+@media (max-width: 992px) {
+  .container {
+    padding: 15px;
+  }
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+}
+
+/* Responsive styles for even smaller screens */
+@media (max-width: 576px) {
+  .container {
+    padding: 5px;
+  }
+}
+
+@media (max-width: 350px) {
+  .container {
+    padding: 0;
+    height: 100%;
+  }
+  #btn {
+    padding: 0;
+    overflow: inherit;
+    border-radius: 10px;
+    /* margin: ; */
+    margin-left: 5px;
+  }
+  body {
+    width: 100%;
+  }
+  .container img {
+    width: 5rem;
+    margin-left: 2px;
+  }
+  .container h1 p {
+    text-align: center;
+    margin: auto;
+  }
+}
+
+/* Styles for the container */
+.container {
+  width: 100%;
+  max-width: 1200px; /* Adjust the maximum width as needed */
+  margin: 0 auto; /* Center the container */
+
+  /* Add additional styling as needed */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Responsive styles using media queries */
+@media (max-width: 600px) {
+  /* Adjust styles for screens with a maximum width of 600px */
+  .container {
+    padding: 10px;
+  }
+}
+
+/* Add more media queries for other screen sizes if needed */
