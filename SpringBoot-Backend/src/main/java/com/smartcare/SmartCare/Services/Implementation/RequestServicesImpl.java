@@ -89,7 +89,7 @@ public class RequestServicesImpl implements RequestServices {
         List<String> nearestNgoByLongLat = findNearestNgoByLongLat(longitude, latitude);
         List<NgoWithKms> finalResultOfNgoWithKms = new ArrayList<>();
         log.info(String.valueOf(nearestNgoByLongLat.size()));
-        if(nearestNgoByLongLat.isEmpty()) {
+        if(!nearestNgoByLongLat.isEmpty()) {
             for (int i = 0; i < nearestNgoByLongLat.size(); i++) {
                 NgoWithKms ngoWithKms = new NgoWithKms();
                 String ngoId = nearestNgoByLongLat.get(i);
