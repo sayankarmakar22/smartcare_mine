@@ -51,6 +51,24 @@ form .input-box span.details {
   font-weight: 500;
   margin-bottom: 5px;
 }
+a {
+  text-decoration: none;
+}
+.button {
+  height: 30px;
+  width: 100%;
+  text-align: center;
+  padding: 5px 10px 5px 10px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
 .user-details .input-box input {
   height: 45px;
   width: 100%;
@@ -124,7 +142,11 @@ form .button input:hover {
   .container {
     max-width: 100%;
   }
-  form .user-details .input-box {
+  .button {
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+  }
+  form .user-details .input-box .button {
     margin-bottom: 15px;
     width: 100%;
   }
@@ -143,4 +165,33 @@ form .button input:hover {
   .container .content .category {
     flex-direction: column;
   }
+  .button {
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+  }
+  /* .button {
+    padding: 0 130px 0 130px;
+  } */
 }
+/* @media (max-width: 350px) {
+  .button {
+    padding: 0 10px 0 10px;
+  }
+}
+@media (max-width: 992px) {
+  .button {
+    padding: 0 230px 0 230px;
+  }
+}
+
+@media (max-width: 768px) {
+  .button {
+    padding: 0 200px 0 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .button {
+    padding: auto;
+  }
+} */
