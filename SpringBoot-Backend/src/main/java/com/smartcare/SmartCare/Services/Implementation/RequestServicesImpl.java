@@ -4,10 +4,12 @@ import com.smartcare.SmartCare.DTO.NgoWithKms;
 import com.smartcare.SmartCare.Kafka.Config.AppConstants;
 import com.smartcare.SmartCare.Model.Customer;
 import com.smartcare.SmartCare.Model.HelpList;
+import com.smartcare.SmartCare.Model.PinGenerate;
 import com.smartcare.SmartCare.Redis.Model.RedisHelpList;
 import com.smartcare.SmartCare.Repository.ActiveAgentRepo;
 import com.smartcare.SmartCare.Repository.HelpListRepo;
 import com.smartcare.SmartCare.Repository.OwnerRepo;
+import com.smartcare.SmartCare.Repository.PinGenerateRepo;
 import com.smartcare.SmartCare.Services.RequestServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +22,7 @@ import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.args.GeoUnit;
 import redis.clients.jedis.resps.GeoRadiusResponse;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 @Service
 public class RequestServicesImpl implements RequestServices {
@@ -43,6 +42,9 @@ public class RequestServicesImpl implements RequestServices {
 
     @Autowired
     private HelpListRepo helpListRepo;
+
+    @Autowired
+    private PinGenerateRepo pinGenerateRepo;
 
     @Autowired
     private OwnerRepo ownerRepo;
@@ -111,6 +113,15 @@ public class RequestServicesImpl implements RequestServices {
     @Override
     public String bookedNgo(String ngoId, String custId,String lon,String lat) {
         int totalActiveNgoMembers = activeAgentRepo.totalActiveNgoMembers(ngoId);
+
+        String pin = UUID.randomUUID().toString().substring(0,3);
+        PinGenerate pinGenerate = new PinGenerate();
+        pinGenerate.setPin(pin);
+        Customer customer = new Customer();
+        customer.setUserId(custId);
+        pinGenerate.setCustomer(customer);
+        pinGenerateRepo.save(pinGenerate);
+
         if(totalActiveNgoMembers > 0){
             RedisHelpList redisHelpList = new RedisHelpList();
             redisHelpList.setRequestDate(new Date());
@@ -122,7 +133,7 @@ public class RequestServicesImpl implements RequestServices {
             redisHelpList.setNgoId(ngoId);
             redisTemplate.opsForHash().put(hashKeyForRequestSentNgo,custId,redisHelpList);
             kafkaTemplate.send(AppConstants.RequestTopicName,custId);
-            return "Booked";
+            return "Booked" + "PIN : " + pin;
         }
         throw new RuntimeException("there is no one available into this ngo..!!");
     }
@@ -133,26 +144,31 @@ public class RequestServicesImpl implements RequestServices {
     }
 
     @Override
-    public Object markedRequestAsClosed(String id) {
+    public Object markedRequestAsClosed(String id,String pin) {
         RedisHelpList list = (RedisHelpList) redisTemplate.opsForHash().get(hashKeyForRequestSentNgo, id);
-        list.setStatus("ClOSED");
-        list.setSolvedTime(new Date());
-        redisTemplate.opsForHash().put(hashKeyForRequestSentNgo,id,list);
+        String securityPin = pinGenerateRepo.findPinByCustId(id);
+        log.info("user pin :" + pin + " find from db : " + securityPin);
+        if(securityPin.equals(pin)) {
+            list.setStatus("ClOSED");
+            list.setSolvedTime(new Date());
+            redisTemplate.opsForHash().put(hashKeyForRequestSentNgo, id, list);
 
-        HelpList helpList = new HelpList();
-        helpList.setRequestDate(list.getRequestDate());
-        helpList.setLongitude(list.getLongitude());
-        helpList.setLatitude(list.getLatitude());
-        helpList.setStatus(list.getStatus());
-        helpList.setSolvedTime(list.getSolvedTime());
-        helpList.setNgoId(list.getNgoId());
-        Customer customer = new Customer();
-        customer.setUserId(list.getCustomerId());
-        helpList.setCustomer(customer);
-        helpListRepo.save(helpList);
-        redisTemplate.opsForHash().delete(hashKeyForRequestSentNgo,id);
-        log.info(String.valueOf(list));
-        return null;
+            HelpList helpList = new HelpList();
+            helpList.setRequestDate(list.getRequestDate());
+            helpList.setLongitude(list.getLongitude());
+            helpList.setLatitude(list.getLatitude());
+            helpList.setStatus(list.getStatus());
+            helpList.setSolvedTime(list.getSolvedTime());
+            helpList.setNgoId(list.getNgoId());
+            Customer customer = new Customer();
+            customer.setUserId(list.getCustomerId());
+            helpList.setCustomer(customer);
+            helpListRepo.save(helpList);
+            redisTemplate.opsForHash().delete(hashKeyForRequestSentNgo, id);
+            log.info(String.valueOf(list));
+            return "Request has been updated to closed status";
+        }
+        throw new RuntimeException("Entered Pin Is Not Validate Now!!");
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.smartcare.SmartCare.Controllers;
 
 import com.smartcare.SmartCare.DTO.NgoWithKms;
 import com.smartcare.SmartCare.Services.Implementation.RequestServicesImpl;
-import com.smartcare.SmartCare.Services.RequestServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +33,9 @@ public class RequestControllers {
         return new ResponseEntity<>(requestServices.viewRequestByCustId(id),HttpStatus.FOUND);
     }
 
-    @PostMapping("/done/{id}")
-    public ResponseEntity<Object> completeRequest(@PathVariable String id){
-        return new ResponseEntity<>(requestServices.markedRequestAsClosed(id),HttpStatus.OK);
+    @PostMapping("/done/{id}/{pin}")
+    public ResponseEntity<Object> completeRequest(@PathVariable String id,@PathVariable String pin){
+        return new ResponseEntity<>(requestServices.markedRequestAsClosed(id,pin),HttpStatus.OK);
     }
 
     @GetMapping("/all/{type}/{id}")

@@ -16,6 +16,6 @@ public interface RequestServices {
 
     Object viewRequestByCustId(String id);
 
-    Object markedRequestAsClosed(String id);
+    Object markedRequestAsClosed(String id,String pin);
     Object allRequest(String type,String id);
 }
